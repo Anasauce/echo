@@ -1,4 +1,4 @@
- /* eslint-env mocha */
+/* eslint-env mocha */
 /* global expect, testContext */
 /* eslint-disable prefer-arrow-callback, no-unused-expressions, max-nested-callbacks */
 import stubs from 'src/test/stubs'
@@ -19,7 +19,6 @@ describe.only(testContext(__filename), function () {
   describe('processCycleReflectionStarted()', function () {
     const chatService = require('src/server/services/chatService')
     const {processCycleReflectionStarted} = require('../cycleReflectionStarted')
-
     describe('when reflection has started', function () {
       beforeEach('setup data & mocks', async function () {
         useFixture.nockClean()
@@ -55,8 +54,6 @@ describe.only(testContext(__filename), function () {
         expect(chatService.sendChannelMessage).to.have.been
           .calledWithMatch(this.phaseWithRetrospective.channelName, 'Time to start your reflection process for cycle')
       })
-
-      it('does not send a cycle reflection announcement to ph')
     })
   })
 })
