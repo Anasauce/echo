@@ -1,4 +1,4 @@
-/* eslint-env mocha */
+ /* eslint-env mocha */
 /* global expect, testContext */
 /* eslint-disable prefer-arrow-callback, no-unused-expressions, max-nested-callbacks */
 import stubs from 'src/test/stubs'
