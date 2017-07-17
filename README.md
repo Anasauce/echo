@@ -1,9 +1,9 @@
-# echo (formerly game)
+# echo
 
 [ ![Codeship Status for LearnersGuild/echo](https://codeship.com/projects/8ee1a1d0-17e4-0134-1d69-2a776fb5d411/status?branch=master)](https://codeship.com/projects/158610)
-[![Code Climate GPA](https://codeclimate.com/repos/579a4ec2e7852e0064005f1b/badges/4817694087b17643b7b7/gpa.svg)](https://codeclimate.com/repos/579a4ec2e7852e0064005f1b/feed)
-[![Code Climate Issue Count](https://codeclimate.com/repos/579a4ec2e7852e0064005f1b/badges/4817694087b17643b7b7/issue_count.svg)](https://codeclimate.com/repos/579a4ec2e7852e0064005f1b/feed)
-[![Test Coverage](https://codeclimate.com/repos/579a4ec2e7852e0064005f1b/badges/4817694087b17643b7b7/coverage.svg)](https://codeclimate.com/repos/579a4ec2e7852e0064005f1b/coverage)
+[![Code Climate GPA](https://codeclimate.com/repos/579a4ec2e7852e0064005f1b/badges/595cf326e7b71a7ac600287c/gpa.svg)](https://codeclimate.com/repos/579a4ec2e7852e0064005f1b/feed)
+[![Code Climate Issue Count](https://codeclimate.com/repos/579a4ec2e7852e0064005f1b/badges/595cf326e7b71a7ac600287c/issue_count.svg)](https://codeclimate.com/repos/579a4ec2e7852e0064005f1b/feed)
+[![Test Coverage](https://codeclimate.com/repos/579a4ec2e7852e0064005f1b/badges/595cf326e7b71a7ac600287c/coverage.svg)](https://codeclimate.com/repos/579a4ec2e7852e0064005f1b/coverage)
 
 This is the echo service.
 
@@ -14,7 +14,7 @@ Welcome to [Echo](http://i.giphy.com/MGU6B1h1jSfja.gif).
 Before you can run echo you need:
 - To install and set up the [IDM service](https://github.com/LearnersGuild/idm)
 
-### SET UP ECHO
+### SETTING UP THE ECHO SERVICE
 
 ##### 1. **Globally** install [nvm][nvm], [avn][avn], and [avn-nvm][avn-nvm].
 
@@ -41,7 +41,14 @@ export NODE_ENV=development
 
 ##### 5. [Install RethinkDB][install-rethinkdb].
 
-##### 6. Create your `.env.development` file for your environment.
+##### 6. Create a free AWS account:
+[https://aws.amazon.com](https://aws.amazon.com/)
+
+Make a copy of your access key ID and secret access key. You'll need to include these in your  environment variables in the next step.
+
+<img width="1132" alt="screen shot 2017-07-06 at 2 17 26 pm" src="https://user-images.githubusercontent.com/1890882/27933975-69a1880a-6258-11e7-9e9a-a02256a129e3.png">
+
+##### 7. Create your `.env.development` file for your environment.
 Take out all comments in your final version.
 Example:
 ```
@@ -53,22 +60,22 @@ RETHINKDB_URL=rethinkdb://localhost:28015/echo_development
 IDM_BASE_URL=http://idm.learnersguild.dev
 JWT_PRIVATE_KEY="<get from IDM service>"
 JWT_PUBLIC_KEY="<get from IDM service>"
-# Slack / command CLI settings
-CHAT_BASE_URL=https://slack.com
-CHAT_API_TOKEN=<get from dev slack instance (or another teammate)>
-CLI_COMMAND_TOKEN=<get from echo slash commands app (or another teammate)>
-# external API settings
+# External API settings
 GITHUB_ORG_ADMIN_TOKEN="<GitHub token with permissions in LearnersGuild, GuildCrafts, and GuildCraftsTesting>"
 GITHUB_CRAFTS_REPO="https://github.com/GuildCraftsTesting/web-development-js-testing"
+S3_BUCKET=guild-development
+S3_KEY_PREFIX=db
+AWS_ACCESS_KEY_ID=<YOUR_AWS_ACCESS_KEY_ID>
+AWS_SECRET_ACCESS_KEY=<YOUR_AWS_SECRET_ACCESS_KEY>
 ```
 
-##### 7. Install dependencies:
+##### 8. Install dependencies:
 
 ```bash
 npm install
 ```
 
-##### 8. Create a development & test databases:
+##### 9. Create a development & test databases:
 
 ```bash
 npm run db:create
@@ -80,7 +87,7 @@ npm run db:migrate:up
 NODE_ENV=test npm run db:migrate:up
 ```
 
-### RUN THE SERVER
+### RUNNING THE SERVER
 
 **NOTE:** you'll need [mehserve][mehserve], [idm][idm] and this server all running at the same time for things to work.
 
@@ -100,12 +107,38 @@ npm run workers
 npm run workers:cycleLaunched
 ```
 
-**NOTE:** If you want to use `/slash` commands from the development Slack instance, you'll need to set up localtunnel, as well:
+### USING THE DEV SLACK INSTANCE WITH YOUR LOCAL ECHO SERVICE
+
+##### 1. Join the dev Slack team by requesting (and accepting) an invitation from a teammate.
+
+##### 2. Configure your dev environment for OUTBOUND calls _to_ the Slack API.
+
+Add the following to your `.env.development`:
+```
+# Slack / command CLI settings
+CHAT_BASE_URL=https://slack.com
+CHAT_API_TOKEN=<the Slack bot user's OAuth access token. obtain from a teammate or in the Slack team's app settings>
+```
+
+##### 3. Configure your dev environment for INBOUND calls _from_ Slack (for /slash commands).
+
+Add the following to your `.env.development`:
+```
+CLI_COMMAND_TOKEN=<the Slack app's verification token. obtain from a teammate or in the Slack team's app settings>
+```
+
+##### 4. Set up localtunnel:
 
 ```bash
 npm install -g localtunnel
 lt --port $(cat ~/.mehserve/echo.learnersguild) --subdomain slackslash
 ```
+
+**NOTE:** You can ignore this message after starting localtunnel:
+```
+your url is: https://slackslash.localtunnel.me
+```
+It's not a URL you're meant to visit in the browser directly; it is the URL already configured in the dev Slack team's echo app and where incoming requests for /slash commands are sent. With localtunnel running and configured properly (along with `echo`, `idm` and `mehserve`), when you issue a slash command in a channel in the dev Slack team, the request will be sent to https://slackslash.localtunnel.me and served by the echo service running on your local machine.
 
 ## CONTINUOUS INTEGRATION
 
