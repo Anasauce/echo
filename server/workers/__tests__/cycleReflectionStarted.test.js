@@ -49,13 +49,11 @@ describe.only(testContext(__filename), function () {
           expect(chatService.sendDirectMessage).to.have.been
             .calledWithMatch(memberHandles, 'Time to start your reflection process for cycle')
         })
-        
         it('sends the cycle reflection announcement in phase channel', async function () {
           await processCycleReflectionStarted(this.cycle)
           expect(chatService.sendChannelMessage).to.have.been
             .calledWithMatch(this.phaseWithRetrospective.channelName, 'Time to start your reflection process for cycle')
         })
-
         it('does not send a cycle reflection announcement to ')
       })
     })
