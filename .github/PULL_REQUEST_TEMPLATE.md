@@ -1,4 +1,4 @@
-Fixes [ch<NUM>](https://app.clubhouse.io/learnersguild/story/<NUM>).
+Fixes #<GITHUB_ISSUE_NUMBER>.
 
 ## Overview
 
